@@ -29,36 +29,31 @@ pub struct Shortcut<EID, NID> {
 
 impl<EID, NID> Edge<EID, NID>
 where
-    EID: Copy + Eq,
-    NID: Copy + Eq,
+    EID: Copy + Eq + Debug,
+    NID: Copy + Eq + Debug,
 {
     pub fn new(id: EID, from: NID, to: NID, cost: Vec<f64>) -> Self {
         Self { id, from, to, cost }
     }
 }
 
-pub struct Contractor<'g, D, ToEdges, FromEdges, EID, NID>
-// where
-//     NID: Copy + Eq + 'g,
-//     D: FnMut(NID, NID, &[f64]) -> Vec<f64>,
-//     ToEdges: Fn(NID) -> &'g [Edge<NID>],
-//     FromEdges: Fn(NID) -> &'g [Edge<NID>],
-{
+pub struct Contractor<D, ToEdges, FromEdges, EID, NID> {
     dijkstra: D,
     to_edges: ToEdges,
     from_edges: FromEdges,
     lp: PreferenceLp,
-    _nid: std::marker::PhantomData<&'g NID>,
-    _eid: std::marker::PhantomData<&'g EID>,
+    _nid: std::marker::PhantomData<NID>,
+    _eid: std::marker::PhantomData<EID>,
 }
 
-impl<'g, D, ToEdges, FromEdges, EID, NID> Contractor<'g, D, ToEdges, FromEdges, EID, NID>
+impl<D, ToEdges, FromEdges, EID, NID> Contractor<D, ToEdges, FromEdges, EID, NID>
 where
-    EID: Copy + Eq + Debug + 'g,
-    NID: Copy + Eq + Debug + 'g,
+    EID: Copy + Eq + Debug,
+    NID: Copy + Eq + Debug,
+    // fn dijkstra(source: NID, target:NID, alpha: &[f64]) -> Vec<f64> (cost vector of resulting path)
     D: FnMut(NID, NID, &[f64]) -> Vec<f64>,
-    ToEdges: Fn(NID) -> &'g [Edge<EID, NID>],
-    FromEdges: Fn(NID) -> &'g [Edge<EID, NID>],
+    ToEdges: Fn(NID) -> Vec<Edge<EID, NID>>,
+    FromEdges: Fn(NID) -> Vec<Edge<EID, NID>>,
 {
     pub fn new(dijkstra: D, to_edges: ToEdges, from_edges: FromEdges, dim: usize) -> Result<Self> {
         let lp = PreferenceLp::new(dim)?;
