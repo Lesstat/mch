@@ -4,7 +4,7 @@ use std::io::BufReader;
 use std::io::{BufWriter, Read, Write};
 use std::process::{Child, Command, Stdio};
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 pub struct PreferenceLp {
     lp: Child,
@@ -28,7 +28,13 @@ impl PreferenceLp {
             .arg(dim.to_string())
             .stdout(Stdio::piped())
             .stdin(Stdio::piped())
-            .spawn()?;
+            .spawn()
+            .with_context(|| {
+                format!(
+                    "Failed trying to start lp binary at {}.\n Maybe recompile the whole workspace",
+                    path.display()
+                )
+            })?;
 
         Ok(Self { lp, dim })
     }
@@ -126,4 +132,9 @@ impl PreferenceLp {
             x => panic!("Unknown control byte received on main side: {}", x),
         }
     }
+}
+
+#[test]
+fn test_create_lp() {
+    let _ = PreferenceLp::new(3).unwrap();
 }
