@@ -83,6 +83,13 @@ where
 
         let mut alpha = equal_weights(shortcut_cost.len());
 
+        let shortcut = Shortcut {
+            from: e1.from,
+            to: e2.to,
+            cost: shortcut_cost.clone(),
+            replaced_edges: (e1.id, e2.id),
+        };
+
         let mut exact = false;
         loop {
             let path_cost = (self.dijkstra)(e1.from, e2.to, &alpha);
@@ -90,12 +97,6 @@ where
             let diff_by_alhpa =
                 costs_by_alpha(&shortcut_cost, &alpha) - costs_by_alpha(&path_cost, &alpha);
             if float_eq!(diff_by_alhpa, 0.0) {
-                let shortcut = Shortcut {
-                    from: e1.from,
-                    to: e2.to,
-                    cost: shortcut_cost,
-                    replaced_edges: (e1.id, e2.id),
-                };
                 return Ok(Some(shortcut));
             }
 
@@ -112,6 +113,9 @@ where
                     if delta + ACCURACY <= 0.0 {
                         return Ok(None);
                     } else if same_array(&pref, &alpha) {
+                        if exact {
+                            return Ok(Some(shortcut));
+                        }
                         exact = true;
                         continue;
                     }
