@@ -13,18 +13,18 @@ pub const F64_SIZE: usize = std::mem::size_of::<f64>();
 
 #[derive(Debug)]
 pub struct Edge<EID, NID> {
-    id: EID,
-    from: NID,
-    to: NID,
-    cost: Vec<f64>,
+    pub id: EID,
+    pub from: NID,
+    pub to: NID,
+    pub cost: Vec<f64>,
 }
 
 #[derive(Debug)]
 pub struct Shortcut<EID, NID> {
-    from: NID,
-    to: NID,
-    cost: Vec<f64>,
-    replaced_edges: (EID, EID),
+    pub from: NID,
+    pub to: NID,
+    pub cost: Vec<f64>,
+    pub replaced_edges: (EID, EID),
 }
 
 impl<EID, NID> Edge<EID, NID>
