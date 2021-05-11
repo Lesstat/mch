@@ -97,12 +97,7 @@ impl PreferenceLp {
         let child_stdin = self.lp.stdin.as_mut().unwrap();
 
         let mut b = BufWriter::new(child_stdin);
-        let c = if exact {
-            println!("solving exact");
-            3u8
-        } else {
-            2u8
-        };
+        let c = if exact { 3u8 } else { 2u8 };
         b.write_all(&[c])?;
         b.flush()?;
 
