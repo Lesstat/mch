@@ -67,7 +67,7 @@ where
         })
     }
 
-    fn shortcuts(
+    pub fn shortcuts(
         &mut self,
         e1: &Edge<EID, NID>,
         e2: &Edge<EID, NID>,

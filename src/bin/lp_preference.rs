@@ -156,7 +156,7 @@ impl Lp {
             }
 
             *result.last_mut().unwrap() = glp_get_col_prim(self.lp, self.delta_col);
-            Ok(result.into())
+            Ok(result)
         }
     }
 }
