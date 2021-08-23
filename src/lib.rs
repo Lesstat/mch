@@ -11,7 +11,7 @@ pub use utils::{add_edge_costs, convert_to_f64_vec, costs_by_alpha, equal_weight
 pub const ACCURACY: f64 = 0.0000005;
 pub const F64_SIZE: usize = std::mem::size_of::<f64>();
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Edge<EID, NID> {
     pub id: EID,
     pub from: NID,
