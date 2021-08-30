@@ -94,9 +94,11 @@ where
         loop {
             let path_cost = (self.dijkstra)(e1.from, e2.to, &alpha);
 
-            let diff_by_alhpa =
-                costs_by_alpha(&shortcut_cost, &alpha) - costs_by_alpha(&path_cost, &alpha);
-            if float_eq!(diff_by_alhpa, 0.0) {
+            if is_dominated(&path_cost, &shortcut_cost) {
+                return Ok(None);
+            }
+
+            if same_array(&path_cost, &shortcut_cost) {
                 return Ok(Some(shortcut));
             }
 
@@ -145,4 +147,15 @@ where
 
         Ok(shortcuts)
     }
+}
+
+fn is_dominated(path_cost: &[f64], shortcut_cost: &[f64]) -> bool {
+    let mut some_different = false;
+    let dominated = !path_cost.iter().zip(shortcut_cost).any(|(p, s)| {
+        if !float_eq!(p, s) {
+            some_different = true;
+        }
+        p > s
+    });
+    dominated && some_different
 }
