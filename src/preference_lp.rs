@@ -70,7 +70,7 @@ impl PreferenceLp {
 
         let write_buffer: Vec<_> = norm_costs
             .iter()
-            .flat_map(|c| c.to_ne_bytes().iter().copied().collect::<Vec<_>>())
+            .flat_map(|c| c.to_ne_bytes().to_vec())
             .collect();
 
         b.write_all(&[1u8])?;
